@@ -6,17 +6,22 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {useForm} from "react-hook-form"
 
+import axios from "axios"
+import { useRouter } from 'next/navigation'
+
 interface Formulaire {
   Titre : string,
   Message : string
 }
 
-
 const Crud = () => {
 
+  const router = useRouter()
   const {register, handleSubmit, reset} = useForm<Formulaire>()
 
-      function ValidationFormulaire(data : Formulaire){
+      async function ValidationFormulaire(data : Formulaire){
+        await axios.post('/api/crud', data )
+       router.push('/')
         console.log(data)
         reset()
       }
