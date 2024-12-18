@@ -12,7 +12,7 @@ export async function POST(request : NextRequest){
     const body = await request.json()
     const validation =  SchemaTaches.safeParse(body)
 
-    if(!validation.success) return NextResponse.json({ error : " Vous devez respectez le schéma "}, {status : 400})
+    if(!validation.success) return NextResponse.json(validation.error.flatten().fieldErrors, {status : 400})
 
     const taches = await prisma.taches.create({
         data : { Titre : body.Titre, Message: body.Message}
