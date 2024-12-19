@@ -5,26 +5,37 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {useForm} from "react-hook-form"
-
 import axios from "axios"
 import { useRouter } from 'next/navigation'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {z} from "zod"
+import SchemaTaches from './../schemas/SchemaTaches';
 
-interface Formulaire {
-  Titre : string,
-  Message : string
-}
+
+
+type Formulaire = z.infer<typeof SchemaTaches>
 
 const Crud = () => {
 
   const router = useRouter()
-  const {register, handleSubmit, reset} = useForm<Formulaire>()
+const {register, handleSubmit, reset, formState: {errors, isSubmitSuccessful} } = useForm<Formulaire>({
+  resolver : zodResolver(SchemaTaches)
+})
 
-      async function ValidationFormulaire(data : Formulaire){
-        await axios.post('/api/crud', data )
-       router.push('/')
-        console.log(data)
-        reset()
-      }
+
+async function ValidationFormulaire(data : Formulaire) {
+
+  try {
+    await axios.post('/api/crud', data)
+    router.push('/')
+  console.log(data)
+  reset()
+  } catch (error) {
+    console.log(error)
+   
+  }
+ 
+}
 
   return (
     <div className="w-3/4 mx-auto mt-6 rounded-xl px-4 py-6 shadow-sm">
@@ -34,13 +45,19 @@ const Crud = () => {
         <form onSubmit={handleSubmit(ValidationFormulaire)}>
         <div className="w-full max-w-sm space-y-2">
          
+    
+
+  <p></p>
+
           <Label htmlFor="Titre" className='font-semibold'>Titre</Label>
-          <Input type="text" id="Titre" placeholder="Titre" {...register('Titre')} />
+          <Input type="text" id="Titre" placeholder="Titre" {...register("Titre")} />
+          {errors.Titre && <p className='text-red-600'> Veuillez rentrez un bon titre </p> }
 
           <Label htmlFor="Message" className='font-semibold'>Message</Label>
           <Input type="text" id="Message" placeholder="Message" {...register('Message')} />
+          {errors.Message && <p className='text-red-600'> Veuillez rentrez un bon message </p>}
 
-          <Button className="mt-2 font-bold">
+          <Button className="mt-2 font-bold" disabled={isSubmitSuccessful}>
           Valider
         </Button>
         </div>
