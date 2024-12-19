@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,30 +11,27 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {z} from "zod"
 import SchemaTaches from './../schemas/SchemaTaches';
 
-
-
 type Formulaire = z.infer<typeof SchemaTaches>
 
 const Crud = () => {
 
   const router = useRouter()
-const {register, handleSubmit, reset, formState: {errors, isSubmitSuccessful} } = useForm<Formulaire>({
+const {register, handleSubmit, reset, formState: {errors} } = useForm<Formulaire>({
   resolver : zodResolver(SchemaTaches)
 })
 
+const [soumission, setSoumission] = useState(false)
 
 async function ValidationFormulaire(data : Formulaire) {
 
   try {
+    setSoumission(true)
     await axios.post('/api/crud', data)
     router.push('/')
   console.log(data)
   reset()
   } catch (error) {
-    console.log(error)
-   
-  }
- 
+    console.log(error)}
 }
 
   return (
@@ -44,10 +41,6 @@ async function ValidationFormulaire(data : Formulaire) {
 
         <form onSubmit={handleSubmit(ValidationFormulaire)}>
         <div className="w-full max-w-sm space-y-2">
-         
-    
-
-  <p></p>
 
           <Label htmlFor="Titre" className='font-semibold'>Titre</Label>
           <Input type="text" id="Titre" placeholder="Titre" {...register("Titre")} />
@@ -57,7 +50,7 @@ async function ValidationFormulaire(data : Formulaire) {
           <Input type="text" id="Message" placeholder="Message" {...register('Message')} />
           {errors.Message && <p className='text-red-600'> Veuillez rentrez un bon message </p>}
 
-          <Button className="mt-2 font-bold" disabled={isSubmitSuccessful}>
+          <Button className="mt-2 font-bold" disabled={soumission}>
           Valider
         </Button>
         </div>
