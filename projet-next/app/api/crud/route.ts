@@ -5,7 +5,8 @@ import {PrismaClient} from "@prisma/client"
 const prisma = new PrismaClient()
 
 export async function GET(request : NextRequest){
-   return  NextResponse.json({ message : "Salut "})
+    const taches = await prisma.taches.findMany()
+   return  NextResponse.json(taches)
 }
 
 export async function POST(request : NextRequest){

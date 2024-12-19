@@ -24,6 +24,19 @@ const TacheAJour = await prisma.taches.update({
 })
 
 return NextResponse.json(TacheAJour)
+}
 
+export async function DELETE(request : NextRequest , {params} : Props){
 
+    const tache = await prisma.taches.findUnique({
+        where : { Id : parseInt(params.id) }
+    })
+    
+    if(!tache) return NextResponse.json({ error : "Cette tache n'existe pas "} , { status : 400})
+    
+    const TacheSupprimé = await prisma.taches.delete({
+        where : { Id : parseInt(params.id)}
+    })
+
+    return NextResponse.json(TacheSupprimé)
 }
