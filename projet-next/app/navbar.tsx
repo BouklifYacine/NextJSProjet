@@ -15,7 +15,8 @@ type Lien = {
 const Navbar = () => {
   const liens: Lien[] = [
     {label: "Accueil", lien: "/"},
-    {label: "Crud", lien: "/crud"}
+    {label: "Crud", lien: "/crud"}, 
+    {label: "Taches", lien : "/taches"}
   ]
 
   const Direction = usePathname()
