@@ -26,7 +26,7 @@ async function ValidationFormulaire(data : Formulaire) {
   try {
     setSoumission(true)
     const response = await axios.post('/api/crud', data)
-    // Attendre que la requête soit terminée
+   
     if (response.status === 200) {
       router.refresh()
       router.push('/taches')
