@@ -31,6 +31,9 @@ async function ValidationFormulaire(data : Formulaire) {
 
   try {
     setSoumission(true)
+    if (tache)
+    await axios.patch("/api/crud/" + tache.Id, data)
+    else
     await axios.post('/api/crud', data)
     router.refresh()
     router.push('/taches')
@@ -56,9 +59,9 @@ async function ValidationFormulaire(data : Formulaire) {
           <Input type="text" id="Message" placeholder="Message" {...register('Message')} defaultValue={tache?.Message} />
           {errors.Message && <p className='text-red-600'> Veuillez rentrez un bon message </p>}
 
-          <Button className="mt-2 font-bold" disabled={soumission}>
-          Valider
-        </Button>
+          {<Button className="mt-2 font-bold" disabled={soumission}>
+         { tache ? "Editer " : "Valider" }
+        </Button>}
         </div>
 
         </form>
