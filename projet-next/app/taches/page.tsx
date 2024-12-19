@@ -9,6 +9,7 @@ import {
   } from "@/components/ui/table"
 import prisma from '@/prisma/client'
 import BadgeOptions from '@/components/BadgeOptions'
+import Link from 'next/navigation'
 
 
 const Taches = async () => {
@@ -23,8 +24,8 @@ const Taches = async () => {
     <TableHeader>
       <TableRow>
       <TableHead >ID</TableHead>
+      <TableHead>Titre</TableHead>
         <TableHead >Message</TableHead>
-        <TableHead>Titre</TableHead>
         <TableHead>Status</TableHead>
         
       </TableRow>
@@ -33,8 +34,8 @@ const Taches = async () => {
       {taches.map((tache) => (
         <TableRow key={tache.Id}>
                  <TableCell className="font-medium">{(tache.Id)}</TableCell>
+                 <TableCell>{tache.Titre}</TableCell>
           <TableCell className="font-medium">{tache.Message}</TableCell>
-          <TableCell>{tache.Titre}</TableCell>
           <TableCell> <BadgeOptions taches={tache.Status}></BadgeOptions></TableCell>
         </TableRow>
       ))}
