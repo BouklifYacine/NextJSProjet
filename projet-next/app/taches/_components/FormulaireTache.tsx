@@ -27,20 +27,27 @@ const {register, handleSubmit, reset, formState: {errors} } = useForm<Formulaire
 
 const [soumission, setSoumission] = useState(false)
 
-async function ValidationFormulaire(data : Formulaire) {
-
+async function ValidationFormulaire(data: Formulaire) {
   try {
     setSoumission(true)
-    if (tache)
-    await axios.patch("/api/crud/" + tache.Id, data)
-    else
-    await axios.post('/api/crud', data)
-    router.refresh()
-    router.push('/taches')
-  console.log(data)
-  reset()
+    let response;
+    
+    if (tache) {
+      response = await axios.patch("/api/crud/" + tache.Id, data)
+    } else {
+      response = await axios.post('/api/crud', data)
+    }
+
+    if (response.status === 200) {
+      router.refresh()
+      router.push('/taches')
+      reset()
+    }
   } catch (error) {
-    console.log(error)}
+    console.log(error)
+  } finally {
+    setSoumission(false)
+  }
 }
 
   return (
