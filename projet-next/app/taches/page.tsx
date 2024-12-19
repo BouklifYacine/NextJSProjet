@@ -13,7 +13,11 @@ import BadgeOptions from '@/components/BadgeOptions'
 
 const Taches = async () => {
 
-    const taches = await prisma.taches.findMany()
+    const taches = await prisma.taches.findMany({
+        orderBy : {
+            Id : 'asc'
+        }
+    })
   return (
     <Table>
     <TableHeader>
