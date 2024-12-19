@@ -27,7 +27,8 @@ async function ValidationFormulaire(data : Formulaire) {
   try {
     setSoumission(true)
     await axios.post('/api/crud', data)
-    router.push('/')
+    router.refresh()
+    router.push('/taches')
   console.log(data)
   reset()
   } catch (error) {
