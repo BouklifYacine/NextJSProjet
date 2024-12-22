@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import SchemaInscription from "./schemas/SchemaInscription"
+import Link from "next/link"
 
 type SchemaInscriptionType = z.infer<typeof SchemaInscription>
 
@@ -53,6 +54,8 @@ export default function Home() {
             <span className="bg-white px-2 text-gray-500">Ou</span>
           </div>
         </div>
+
+        <Link href='/inscription' className="text-center">Créer un compte  </Link>
 
         <Button 
           onClick={() => signIn('google', { callbackUrl: '/crud' })}
