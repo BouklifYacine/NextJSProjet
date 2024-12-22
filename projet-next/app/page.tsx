@@ -1,16 +1,63 @@
 'use client'
 import { signIn } from "next-auth/react"
-import { Button } from "@/components/ui/button" // Si tu utilises shadcn/ui
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import SchemaInscription from "./schemas/SchemaInscription"
+
+type SchemaInscriptionType = z.infer<typeof SchemaInscription>
+
+
 
 export default function Home() {
+  const router = useRouter()
+  const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm<SchemaInscriptionType>({
+    resolver: zodResolver(SchemaInscription)
+  })
+
+  const onSubmit = async (data: SchemaInscriptionType) => {
+    const result = await signIn('credentials', {
+      ...data,
+      redirect: false
+    })
+    if (!result?.error) router.push('/crud')
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="p-8 rounded-lg">
-        <h1 className="text-2xl font-bold mb-6 text-center">Bienvenue</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="w-full max-w-md space-y-8 p-8 rounded-lg border">
+        <h1 className="text-2xl font-bold text-center">Bienvenue</h1>
         
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <Input {...register("email")} type="email" placeholder="Email" />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
+          <div>
+            <Input {...register("password")} type="password" placeholder="Mot de passe" />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+          </div>
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? 'Connexion...' : 'Se connecter'}
+          </Button>
+        </form>
+
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-white px-2 text-gray-500">Ou</span>
+          </div>
+        </div>
+
         <Button 
-          onClick={() => signIn('google')} 
-          className="flex items-center gap-2 bg-white text-gray-700 px-4 py-2 rounded-lg border hover:bg-gray-50 transition-colors"
+          onClick={() => signIn('google', { callbackUrl: '/crud' })}
+          variant="outline"
+          className="w-full flex items-center gap-2"
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
