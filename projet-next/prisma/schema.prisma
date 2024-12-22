@@ -6,7 +6,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+  
 model Taches {
   Id         Int      @id @default(autoincrement())
   Titre      String   @db.VarChar(255)
@@ -52,6 +52,7 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  HashedPassword String? 
   emailVerified DateTime?
   image         String?
   accounts      Account[]
